@@ -10,8 +10,10 @@ import kr.hqservice.framework.command.component.CommandExecutor
 import kr.hqservice.framework.command.component.HQCommandNode
 import kr.hqservice.framework.command.component.ParentCommand
 import kr.hqservice.framework.global.core.component.Component
+import kr.hqservice.framework.netty.api.NettyPlayer
 import kr.hqservice.framework.netty.extension.sendMessage
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.koin.core.annotation.Named
 
 @Component
@@ -33,7 +35,7 @@ class BankCommand(
             bankScope.launch {
                 economy.depositPlayer(target.playerName, amount)
                 sender.sendMessage("${target.playerName} 님한테 $amount 원 입금함")
-                target.nettyPlayer?.sendMessage("님아 돈 입금댐 ㅋㅋ +${amount}", false)
+                target.playerInstance?.sendMessage("돈 입금됨 $amount")
             }
         }
     }
