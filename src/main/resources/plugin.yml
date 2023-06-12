@@ -1,0 +1,6 @@
+name: HQEconomy
+main: kr.hqservice.economy.HQEconomy
+version: 1.0.0-SNAPSHOT
+api-version: 1.19
+depend:
+  - HQFramework
