@@ -10,6 +10,7 @@ import kr.hqservice.framework.global.core.component.HQSingleton
 import org.bukkit.OfflinePlayer
 import org.bukkit.Server
 import org.koin.core.annotation.Named
+import java.util.*
 
 @Component
 @HQSingleton(binds = [Economy::class])
@@ -24,6 +25,10 @@ class EconomyHandler(
         }
     }
 
+    override suspend fun getBalance(uniqueId: UUID): Long {
+        return bankRepository.get(uniqueId).balance
+    }
+
     override suspend fun getBalance(player: OfflinePlayer): Long {
         return getWithBankAction(player) {
             balance
@@ -34,6 +39,10 @@ class EconomyHandler(
         return getWithBankAction(playerName, server::getOfflinePlayer) {
             amount <= balance
         }
+    }
+
+    override suspend fun has(uniqueId: UUID, amount: Long): Boolean {
+        return amount <= bankRepository.get(uniqueId).balance
     }
 
     override suspend fun has(player: OfflinePlayer, amount: Long): Boolean {
@@ -49,6 +58,12 @@ class EconomyHandler(
         }
     }
 
+    override suspend fun withdrawPlayer(uniqueId: UUID, amount: Long) {
+        bankRepository.updateById(uniqueId) {
+            balance -= amount
+        }
+    }
+
     override suspend fun withdrawPlayer(player: OfflinePlayer, amount: Long) {
         val uniqueId = player.uniqueId
         bankRepository.updateById(uniqueId) {
@@ -58,6 +73,12 @@ class EconomyHandler(
 
     override suspend fun depositPlayer(playerName: String, amount: Long) {
         val uniqueId = server.getOfflinePlayer(playerName).uniqueId
+        bankRepository.updateById(uniqueId) {
+            balance += amount
+        }
+    }
+
+    override suspend fun depositPlayer(uniqueId: UUID, amount: Long) {
         bankRepository.updateById(uniqueId) {
             balance += amount
         }
