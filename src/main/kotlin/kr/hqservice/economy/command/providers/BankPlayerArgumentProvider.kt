@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender
 
 @Component
 class BankPlayerArgumentProvider(
-    @MutableNamed("hqservice.economy-server.type") private val server: EconomyServer
+    @MutableNamed(key = "hqeconomy.server.type") private val server: EconomyServer
 ) : HQCommandArgumentProvider<BankPlayer> {
     override fun cast(string: String): BankPlayer {
         return BankPlayer(

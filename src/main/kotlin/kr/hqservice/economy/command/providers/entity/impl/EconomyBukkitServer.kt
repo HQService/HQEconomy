@@ -5,7 +5,7 @@ import kr.hqservice.economy.command.providers.entity.EconomyServer
 import kr.hqservice.framework.global.core.component.Component
 import kr.hqservice.framework.global.core.component.HQSingleton
 import org.bukkit.Server
-import javax.inject.Named
+import org.koin.core.annotation.Named
 
 @Named("bukkit")
 @Component
