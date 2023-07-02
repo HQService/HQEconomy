@@ -25,9 +25,11 @@ class EconomyBankRepository(
     }
 
     override suspend fun get(uniqueId: UUID): EconomyBankEntity {
-        return find(uniqueId) ?: EconomyBankEntity.new {
-            owner = uniqueId
-            balance = 0
+        return find(uniqueId) ?: dataSource.query {
+            EconomyBankEntity.new {
+                owner = uniqueId
+                balance = 0
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import org.koin.core.annotation.Named
 class BankCommand(
     private val economy: Economy,
     @Named("bank") private val bankScope: EconomyCoroutineScope
-) : HQCommandNode() {
+) : HQCommandNode {
     @CommandExecutor(
         label = "add",
         description = "&f/eco add &8<플레이어> <금액> &6| &7해당 플레이어에게 돈을 추가합니다.",
