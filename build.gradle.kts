@@ -10,6 +10,7 @@ repositories {
     mavenCentral()
     mavenLocal()
 
+    maven("https://maven.hqservice.kr/repository/maven-public/")
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
