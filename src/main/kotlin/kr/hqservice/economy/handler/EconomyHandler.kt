@@ -1,24 +1,18 @@
-package kr.hqservice.economy.hanlder
+package kr.hqservice.economy.handler
 
-import kr.hqservice.economy.Economy
-import kr.hqservice.economy.coroutine.EconomyCoroutineScope
+import kr.hqservice.economy.api.Economy
 import kr.hqservice.economy.database.entity.impl.EconomyBankEntity
-import kr.hqservice.economy.database.repository.DatabaseRepository
-import kr.hqservice.framework.global.core.component.Component
-import kr.hqservice.framework.global.core.component.HQService
-import kr.hqservice.framework.global.core.component.HQSingleton
+import kr.hqservice.economy.database.repository.impl.EconomyBankRepository
+import kr.hqservice.framework.global.core.component.Service
 import org.bukkit.OfflinePlayer
 import org.bukkit.Server
-import org.koin.core.annotation.Named
 import java.util.*
 
-@Component
-@HQSingleton(binds = [Economy::class])
+@Service
 class EconomyHandler(
     private val server: Server,
-    @Named("log") private val logCoroutineScope: EconomyCoroutineScope,
-    @Named("economy") private val bankRepository: DatabaseRepository<EconomyBankEntity>
-) : Economy, HQService {
+    private val bankRepository: EconomyBankRepository
+) : Economy {
     override suspend fun getBalance(playerName: String): Long {
         return getWithBankAction(playerName, server::getOfflinePlayer) {
             balance
@@ -26,7 +20,7 @@ class EconomyHandler(
     }
 
     override suspend fun getBalance(uniqueId: UUID): Long {
-        return bankRepository.get(uniqueId).balance
+        return bankRepository.getOrCreate(uniqueId).balance
     }
 
     override suspend fun getBalance(player: OfflinePlayer): Long {
@@ -42,7 +36,7 @@ class EconomyHandler(
     }
 
     override suspend fun has(uniqueId: UUID, amount: Long): Boolean {
-        return amount <= bankRepository.get(uniqueId).balance
+        return amount <= bankRepository.getOrCreate(uniqueId).balance
     }
 
     override suspend fun has(player: OfflinePlayer, amount: Long): Boolean {
@@ -97,6 +91,6 @@ class EconomyHandler(
     private suspend fun <T, R> getWithBankAction(obj: T, getPlayerBlock: (T) -> OfflinePlayer = { it as OfflinePlayer }, action: EconomyBankEntity.() -> R): R {
         val offlinePlayer = getPlayerBlock(obj)
         val uniqueId = offlinePlayer.uniqueId
-        return action(bankRepository.get(uniqueId))
+        return action(bankRepository.getOrCreate(uniqueId))
     }
 }

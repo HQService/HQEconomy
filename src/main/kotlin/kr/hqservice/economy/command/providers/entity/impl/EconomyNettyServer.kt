@@ -2,14 +2,12 @@ package kr.hqservice.economy.command.providers.entity.impl
 
 import kr.hqservice.economy.command.providers.entity.EconomyPlayer
 import kr.hqservice.economy.command.providers.entity.EconomyServer
-import kr.hqservice.framework.global.core.component.Component
-import kr.hqservice.framework.global.core.component.HQSingleton
+import kr.hqservice.framework.global.core.component.Bean
+import kr.hqservice.framework.global.core.component.Qualifier
 import kr.hqservice.framework.netty.api.NettyServer
-import org.koin.core.annotation.Named
 
-@Named("netty")
-@Component
-@HQSingleton(binds = [EconomyServer::class])
+@Bean
+@Qualifier("economy.server.netty")
 class EconomyNettyServer(
     private val netty: NettyServer
 ) : EconomyServer {

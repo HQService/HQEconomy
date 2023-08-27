@@ -7,7 +7,7 @@ import java.util.UUID
 interface DatabaseRepository<T: EconomyEntity> : HQRepository {
     suspend fun create(uniqueId: UUID, init: T.() -> Unit): T
 
-    suspend fun get(uniqueId: UUID): T
+    suspend fun getOrCreate(uniqueId: UUID): T
 
     suspend fun update(entity: T, scope: T.() -> Unit): T
 

@@ -1,23 +1,18 @@
 package kr.hqservice.economy.command.sub
 
 import kotlinx.coroutines.launch
-import kr.hqservice.economy.Economy
+import kr.hqservice.economy.api.Economy
 import kr.hqservice.economy.command.EconomyCommand
 import kr.hqservice.economy.command.argument.BankPlayer
-import kr.hqservice.economy.coroutine.EconomyCoroutineScope
-import kr.hqservice.framework.command.component.ArgumentLabel
-import kr.hqservice.framework.command.component.CommandExecutor
-import kr.hqservice.framework.command.component.HQCommandNode
-import kr.hqservice.framework.command.component.ParentCommand
-import kr.hqservice.framework.global.core.component.Component
+import kr.hqservice.economy.coroutine.impl.EconomyBankCoroutineScope
+import kr.hqservice.framework.command.component.*
 import org.bukkit.command.CommandSender
-import org.koin.core.annotation.Named
 
-@Component
+@Command
 @ParentCommand(binds = [EconomyCommand::class])
 class BankCommand(
     private val economy: Economy,
-    @Named("bank") private val bankScope: EconomyCoroutineScope
+    private val bankScope: EconomyBankCoroutineScope
 ) : HQCommandNode {
     @CommandExecutor(
         label = "add",

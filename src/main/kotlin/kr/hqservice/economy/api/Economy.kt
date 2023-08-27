@@ -1,4 +1,4 @@
-package kr.hqservice.economy
+package kr.hqservice.economy.api
 
 import org.bukkit.OfflinePlayer
 import java.util.UUID

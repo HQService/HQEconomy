@@ -1,7 +1,7 @@
 package kr.hqservice.economy.command
 
+import kr.hqservice.framework.command.component.Command
 import kr.hqservice.framework.command.component.HQCommandRoot
-import kr.hqservice.framework.global.core.component.Component
 
-@Component
+@Command
 class EconomyCommand : HQCommandRoot("eco")

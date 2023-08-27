@@ -11,7 +11,7 @@ import org.bukkit.Location
 
 @Component
 class BankPlayerArgumentProvider(
-    @MutableNamed(key = "hqeconomy.server.type") private val server: EconomyServer
+    @MutableNamed(key = "economy.server.type") private val server: EconomyServer
 ) : HQCommandArgumentProvider<BankPlayer> {
     override fun cast(context: CommandContext, string: String): BankPlayer {
         return BankPlayer(

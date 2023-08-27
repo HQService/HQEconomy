@@ -6,14 +6,10 @@ import kotlinx.coroutines.job
 import kr.hqservice.economy.coroutine.EconomyCoroutineScope
 import kr.hqservice.framework.bukkit.core.HQBukkitPlugin
 import kr.hqservice.framework.global.core.component.Component
-import kr.hqservice.framework.global.core.component.HQSingleton
-import org.koin.core.annotation.Named
 import org.koin.core.component.getScopeName
 import java.util.logging.Level
 import java.util.logging.Logger
 
-@Named("log")
-@HQSingleton(binds = [EconomyCoroutineScope::class])
 @Component
 class EconomyLogCoroutineScope(plugin: HQBukkitPlugin, logger: Logger) : EconomyCoroutineScope(plugin) {
     private val exceptionHandler = CoroutineExceptionHandler { context, throwable ->
