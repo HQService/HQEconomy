@@ -3,8 +3,8 @@ package kr.hqservice.economy.command.providers
 import kr.hqservice.economy.command.argument.BankPlayer
 import kr.hqservice.economy.command.providers.entity.EconomyServer
 import kr.hqservice.framework.bukkit.core.extension.colorize
-import kr.hqservice.framework.command.component.CommandContext
-import kr.hqservice.framework.command.component.HQCommandArgumentProvider
+import kr.hqservice.framework.command.CommandContext
+import kr.hqservice.framework.command.HQCommandArgumentProvider
 import kr.hqservice.framework.global.core.component.Component
 import kr.hqservice.framework.global.core.component.registry.MutableNamed
 import org.bukkit.Location
