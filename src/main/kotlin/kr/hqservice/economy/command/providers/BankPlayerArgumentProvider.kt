@@ -2,9 +2,9 @@ package kr.hqservice.economy.command.providers
 
 import kr.hqservice.economy.command.argument.BankPlayer
 import kr.hqservice.economy.command.providers.entity.EconomyServer
-import kr.hqservice.framework.bukkit.core.extension.colorize
+import kr.hqservice.framework.command.CommandArgumentProvider
 import kr.hqservice.framework.command.CommandContext
-import kr.hqservice.framework.command.HQCommandArgumentProvider
+import kr.hqservice.framework.command.argument.exception.ArgumentFeedback
 import kr.hqservice.framework.global.core.component.Component
 import kr.hqservice.framework.global.core.component.registry.MutableNamed
 import org.bukkit.Location
@@ -12,24 +12,14 @@ import org.bukkit.Location
 @Component
 class BankPlayerArgumentProvider(
     @MutableNamed(key = "economy.server.type") private val server: EconomyServer
-) : HQCommandArgumentProvider<BankPlayer> {
-    override fun cast(context: CommandContext, string: String): BankPlayer {
-        return BankPlayer(
-            string,
-            server.getPlayer(string)
-        )
+) : CommandArgumentProvider<BankPlayer> {
+    override suspend fun cast(context: CommandContext, argument: String?): BankPlayer {
+        argument ?: throw ArgumentFeedback.RequireArgument
+        val economyPlayer = server.getPlayer(argument) ?: throw ArgumentFeedback.Message("$argument 플레이어를 찾을 수 없습니다.")
+        return BankPlayer(argument, economyPlayer)
     }
 
-    override fun getFailureMessage(context: CommandContext, string: String?, argumentLabel: String?): String? {
-        return if(string == null) "&c플레이어의 이름을 입력하세요.".colorize()
-        else "&c$string 플레이어를 찾을 수 없습니다."
-    }
-
-    override fun getResult(context: CommandContext, string: String?): Boolean {
-        return true
-    }
-
-    override fun getTabComplete(context: CommandContext, location: Location?, argumentLabel: String?): List<String> {
+    override suspend fun getTabComplete(context: CommandContext, location: Location?): List<String> {
         return server.getPlayers().map { it.getName() }
     }
 }
