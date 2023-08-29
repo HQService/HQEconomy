@@ -44,9 +44,9 @@ class EconomyCurrencyCommand(private val currencyRegistry: CurrencyRegistry) {
         sender.sendColorizedMessage("&a등록된 재화 목록:")
         currencies.forEach { currency ->
             if (currency.displayName == null) {
-                sender.sendColorizedMessage("&a - ${currency.name}")
+                sender.sendColorizedMessage("&f - ${currency.name}")
             } else {
-                sender.sendColorizedMessage("&a - ${currency.name} &7(${currency.displayName})")
+                sender.sendColorizedMessage("&f - ${currency.name} &7(${currency.displayName})")
             }
         }
     }

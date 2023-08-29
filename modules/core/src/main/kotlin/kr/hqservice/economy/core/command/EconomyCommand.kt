@@ -31,8 +31,8 @@ class EconomyCommand(private val economyService: EconomyService) {
         withContext(Dispatchers.IO) {
             economyService.deposit(target.getUniqueId(), currency.name, amount)
         }
-        sender.sendMessage("${target.getName()} 님한테 돈 $amount 원 입금함")
-        target.sendMessage("돈 입금됨 $amount")
+        sender.sendMessage("성공적으로 ${target.getName()} 님의 ${currency.displayName ?: currency.name}을(를) ${amount}만큼 추가 하였습니다.")
+        target.sendMessage("&a계좌에 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 추가 되었습니다.")
     }
 
     @CommandExecutor(
@@ -52,8 +52,8 @@ class EconomyCommand(private val economyService: EconomyService) {
         withContext(Dispatchers.IO) {
             economyService.withdraw(target.getUniqueId(), currency.name, amount)
         }
-        sender.sendMessage("${target.getName()} 님의 돈 $amount 원 차감함")
-        target.sendMessage("돈 차감됨 $amount")
+        sender.sendMessage("&a성공적으로 ${target.getName()} 님의 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 차감 되었습니다.")
+        target.sendMessage("&a계좌에서 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 차감 되었습니다.")
     }
 
     @CommandExecutor(
@@ -90,9 +90,9 @@ class EconomyCommand(private val economyService: EconomyService) {
         sender.sendColorizedMessage("&a플레이어 ${target.getName()} 님의 계좌:")
         balances.forEach { balance ->
             if (balance.currency.displayName != null) {
-                sender.sendColorizedMessage(" &a- ${balance.currency.name} &7(${balance.currency.displayName})&a: ${balance.balance}")
+                sender.sendColorizedMessage(" &f- ${balance.currency.name} &7(${balance.currency.displayName})&a: ${balance.balance}")
             } else {
-                sender.sendColorizedMessage(" &a- ${balance.currency.name}: ${balance.balance}")
+                sender.sendColorizedMessage(" &f- ${balance.currency.name}: ${balance.balance}")
             }
         }
     }
