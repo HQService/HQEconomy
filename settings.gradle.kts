@@ -1,4 +1,4 @@
-rootProject.name = "HQEconomy"
+rootProject.name = extra["projectName"].toString()
 
 pluginManagement {
     plugins {
@@ -6,6 +6,12 @@ pluginManagement {
     }
     repositories {
         maven("https://maven.hqservice.kr/repository/maven-public")
+    }
+}
+
+file(rootProject.projectDir.path + "/credentials.gradle.kts").let {
+    if (it.exists()) {
+        apply(it.path)
     }
 }
 
