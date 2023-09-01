@@ -8,7 +8,19 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 class EconomyCurrencyEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<EconomyCurrencyEntity>(EconomyCurrencyTable)
+    companion object : IntEntityClass<EconomyCurrencyEntity>(EconomyCurrencyTable) {
+        init {
+            addDefaultCurrencyIfNull()
+        }
+
+        private fun addDefaultCurrencyIfNull() {
+            if (this.find { EconomyCurrencyTable.name eq "default" }.empty()) {
+                this.new {
+                    this.name = "default"
+                }
+            }
+        }
+    }
 
     var name by EconomyCurrencyTable.name
     var displayName by EconomyCurrencyTable.displayName
