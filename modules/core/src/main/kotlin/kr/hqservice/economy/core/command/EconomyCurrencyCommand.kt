@@ -24,7 +24,7 @@ class EconomyCurrencyCommand(private val currencyRegistry: CurrencyRegistry) {
         withContext(Dispatchers.IO) {
             currencyRegistry.createByName(currencyName, displayName)
         }
-        sender.sendColorizedMessage("&a재화 $currencyName 을 성공적으로 생성하였습니다.")
+        sender.sendColorizedMessage("&a재화 $currencyName 을(를) 성공적으로 생성하였습니다.")
     }
 
     @CommandExecutor(

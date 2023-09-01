@@ -9,7 +9,6 @@ import kr.hqservice.framework.command.ArgumentLabel
 import kr.hqservice.framework.command.Command
 import kr.hqservice.framework.command.CommandExecutor
 import kr.hqservice.framework.netty.api.NettyPlayer
-import kr.hqservice.framework.netty.extension.sendMessage
 import org.bukkit.command.CommandSender
 
 @Command(label = "eco", isOp = true)
@@ -31,8 +30,8 @@ class EconomyCommand(private val economyService: EconomyService) {
         withContext(Dispatchers.IO) {
             economyService.deposit(target.getUniqueId(), currency.name, amount)
         }
-        sender.sendMessage("성공적으로 ${target.getName()} 님의 ${currency.displayName ?: currency.name}을(를) ${amount}만큼 추가 하였습니다.")
-        target.sendMessage("&a계좌에 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 추가 되었습니다.")
+        sender.sendColorizedMessage("&a성공적으로 ${target.getName()} 님의 ${currency.displayName ?: currency.name}을(를) ${amount}만큼 추가 하였습니다.")
+        target.sendColorizedMessage("&a계좌에 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 추가 되었습니다.")
     }
 
     @CommandExecutor(
@@ -52,8 +51,8 @@ class EconomyCommand(private val economyService: EconomyService) {
         withContext(Dispatchers.IO) {
             economyService.withdraw(target.getUniqueId(), currency.name, amount)
         }
-        sender.sendMessage("&a성공적으로 ${target.getName()} 님의 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 차감 되었습니다.")
-        target.sendMessage("&a계좌에서 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 차감 되었습니다.")
+        sender.sendColorizedMessage("&a성공적으로 ${target.getName()} 님의 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 차감 되었습니다.")
+        target.sendColorizedMessage("&a계좌에서 ${currency.displayName ?: currency.name}이(가) ${amount}만큼 차감 되었습니다.")
     }
 
     @CommandExecutor(
