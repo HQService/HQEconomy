@@ -10,6 +10,7 @@ import kr.hqservice.framework.command.ArgumentLabel
 import kr.hqservice.framework.command.Command
 import kr.hqservice.framework.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 @Command(label = "currency", parent = EconomyCommand::class)
 class EconomyCurrencyCommand(
@@ -28,7 +29,7 @@ class EconomyCurrencyCommand(
         withContext(Dispatchers.IO) {
             currencyRegistry.createByName(currencyName, displayName)
         }
-        sender.sendColorizedMessage("&a재화 $currencyName 을(를) 성공적으로 생성하였습니다.")
+        sender.sendColorizedMessage("&a재화 ${currencyName}을(를) 성공적으로 생성하였습니다.")
     }
 
     @CommandExecutor(
@@ -44,6 +45,23 @@ class EconomyCurrencyCommand(
             currencyRepository.findByCurrencyName(currency.name)?.displayName = displayName
         }
         sender.sendColorizedMessage("&a재화 ${currency.name} 의 표기 이름을 ${displayName}으로 설정하였습니다.")
+    }
+
+    @CommandExecutor(
+        label = "setDefault",
+        description = "서버의 기본 재화로 설정 합니다."
+    )
+    suspend fun executeSetDefault(
+        sender: CommandSender,
+        @ArgumentLabel("재화") currency: Currency
+    ) {
+        withContext(Dispatchers.IO) {
+            newSuspendedTransaction {
+                currencyRepository.getDefault().isDefault = false
+                currencyRepository.findByCurrencyName(currency.name)?.isDefault = true
+                sender.sendColorizedMessage("&a재화 ${currency.name}이(가) 기본 재화로 설정되었습니다.")
+            }
+        }
     }
 
     @CommandExecutor(
@@ -78,6 +96,10 @@ class EconomyCurrencyCommand(
         sender: CommandSender,
         @ArgumentLabel("재화") currency: Currency
     ) {
+        if (currency.isDefault) {
+            sender.sendColorizedMessage("&c기본으로 설정된 재화는 삭제할 수 없습니다.")
+            return
+        }
         withContext(Dispatchers.IO) {
             currencyRegistry.deleteByName(currency.name)
         }

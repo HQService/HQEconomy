@@ -17,6 +17,14 @@ class EconomyCurrencyRepositoryImpl : EconomyCurrencyRepository {
         }
     }
 
+    override suspend fun getDefault(): EconomyCurrencyEntity {
+        return newSuspendedTransaction {
+            EconomyCurrencyEntity.find {
+                EconomyCurrencyTable.isDefault eq true
+            }.limit(1).single()
+        }
+    }
+
     override suspend fun count(): Long {
         return newSuspendedTransaction {
             EconomyCurrencyEntity.count()

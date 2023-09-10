@@ -8,11 +8,15 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 
 @Bean
 class CurrencyRegistryImpl(private val currencyRepository: EconomyCurrencyRepository) : CurrencyRegistry {
-    override suspend fun createByName(currencyName: String, displayName: String?) {
-        currencyRepository.new {
+    override suspend fun createByName(currencyName: String, displayName: String?): Currency {
+        return currencyRepository.new {
             this.name = currencyName
             this.displayName = displayName
-        }
+        }.toDto()
+    }
+
+    override suspend fun getDefault(): Currency {
+        return currencyRepository.getDefault().toDto()
     }
 
     override suspend fun findCurrencyByName(currencyName: String): Currency? {
