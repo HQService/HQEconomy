@@ -9,6 +9,7 @@ bukkitResourceGenerator {
     name = "HQEconomy"
     apiVersion = "1.17"
     depend = listOf("HQFramework")
+    softDepend = listOf("Vault")
 }
 
 dependencies {
@@ -16,4 +17,5 @@ dependencies {
     compileOnly(framework.core)
     runtimeOnly(project(":modules:core"))
     runtimeOnly(project(":modules:api"))
+    runtimeOnly(project(":modules:hook-vault"))
 }
