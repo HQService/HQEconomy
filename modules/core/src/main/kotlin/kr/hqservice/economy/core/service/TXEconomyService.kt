@@ -11,7 +11,6 @@ import kr.hqservice.economy.core.repository.EconomyBalanceRepository
 import kr.hqservice.economy.core.repository.EconomyCurrencyRepository
 import kr.hqservice.economy.core.repository.EconomyLogRepository
 import kr.hqservice.framework.global.core.component.Service
-import org.jetbrains.exposed.sql.SchemaUtils.withDataBaseLock
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.util.*
 
@@ -43,9 +42,8 @@ class TXEconomyService(
             val currencyEntity = currencyRepository
                 .findByCurrencyName(currencyName) ?: throw CurrencyNotFoundException(currencyName)
             val balanceEntity = getOrCreateAccountEntity(accountId, currencyEntity)
-            withDataBaseLock {
-                balanceEntity.balance -= amount
-            }
+
+            balanceEntity.balance -= amount
             logTransaction(accountId, currencyEntity.id.value, -amount)
             Balance(currencyEntity.toDto(), balanceEntity.balance)
         }
@@ -56,9 +54,8 @@ class TXEconomyService(
             val currencyEntity = currencyRepository
                 .findByCurrencyName(currencyName) ?: throw CurrencyNotFoundException(currencyName)
             val balanceEntity = getOrCreateAccountEntity(accountId, currencyEntity)
-            withDataBaseLock {
-                balanceEntity.balance += amount
-            }
+
+            balanceEntity.balance += amount
             logTransaction(accountId, currencyEntity.id.value, amount)
             Balance(currencyEntity.toDto(), balanceEntity.balance)
         }
