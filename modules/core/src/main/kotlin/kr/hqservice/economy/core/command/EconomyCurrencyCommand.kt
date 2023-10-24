@@ -42,7 +42,9 @@ class EconomyCurrencyCommand(
         @ArgumentLabel("재화 표기 이름") displayName: String
     ) {
         withContext(Dispatchers.IO) {
-            currencyRepository.findByCurrencyName(currency.name)?.displayName = displayName
+            newSuspendedTransaction {
+                currencyRepository.findByCurrencyName(currency.name)?.displayName = displayName
+            }
         }
         sender.sendColorizedMessage("&a재화 ${currency.name} 의 표기 이름을 ${displayName}으로 설정하였습니다.")
     }
