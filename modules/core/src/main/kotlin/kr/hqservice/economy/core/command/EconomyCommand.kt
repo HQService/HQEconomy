@@ -10,9 +10,15 @@ import kr.hqservice.framework.command.Command
 import kr.hqservice.framework.command.CommandExecutor
 import kr.hqservice.framework.netty.api.NettyPlayer
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import java.text.DecimalFormat
 
 @Command(label = "eco", isOp = true)
 class EconomyCommand(private val economyService: EconomyService) {
+    companion object {
+        private val format = DecimalFormat("#,###")
+    }
+
     @CommandExecutor(
         label = "deposit",
         description = "해당 플레이어에게 돈을 추가합니다."
@@ -62,13 +68,16 @@ class EconomyCommand(private val economyService: EconomyService) {
     suspend fun executeGetBalance(
         sender: CommandSender,
         @ArgumentLabel("대상") target: NettyPlayer,
-        @ArgumentLabel("재화") currency: Currency
+        @ArgumentLabel("재화") currency: Currency,
+        @ArgumentLabel("타겟") viewer: Player?
     ) {
         val balance = withContext(Dispatchers.IO) {
             economyService.getBalance(target.getUniqueId(), currency.name)
         }
 
-        sender.sendColorizedMessage("&a플레이어 ${target.getName()} 님은 재화 ${balance.currency.name}을(를) ${balance.balance} 만큼 지니고 있습니다.")
+        if (viewer != null) {
+            viewer.sendColorizedMessage("&7 ${target.getName()}&7 님의 ${balance.currency.displayName}: &e${format.format(balance.balance)}")
+        } else sender.sendColorizedMessage("&7 ${target.getName()}&7 님의 ${balance.currency.displayName}: &e${format.format(balance.balance)}")
     }
 
     @CommandExecutor(
@@ -77,7 +86,8 @@ class EconomyCommand(private val economyService: EconomyService) {
     )
     suspend fun executeGetBalances(
         sender: CommandSender,
-        @ArgumentLabel("대상") target: NettyPlayer
+        @ArgumentLabel("대상") target: NettyPlayer,
+        @ArgumentLabel("타겟") viewer: Player?
     ) {
         val balances = withContext(Dispatchers.IO) {
             economyService.getBalances(target.getUniqueId())
@@ -86,12 +96,13 @@ class EconomyCommand(private val economyService: EconomyService) {
             sender.sendColorizedMessage("&c현재 플레이어 ${target.getName()}님은 아무 재화도 보유하고 있지 않습니다.")
             return
         }
-        sender.sendColorizedMessage("&a플레이어 ${target.getName()} 님의 계좌:")
+        val view = viewer ?: sender
+        view.sendColorizedMessage("&f플레이어 ${target.getName()} 님의 계좌:")
         balances.forEach { balance ->
             if (balance.currency.displayName != null) {
-                sender.sendColorizedMessage(" &f- ${balance.currency.name} &7(${balance.currency.displayName})&a: ${balance.balance}")
+                view.sendColorizedMessage(" &7- ${balance.currency.displayName}:&e ${format.format(balance.balance)}")
             } else {
-                sender.sendColorizedMessage(" &f- ${balance.currency.name}: ${balance.balance}")
+                view.sendColorizedMessage(" &7- ${balance.currency.displayName}: &e${format.format(balance.balance)}")
             }
         }
     }

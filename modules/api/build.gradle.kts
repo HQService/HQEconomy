@@ -8,26 +8,32 @@ dependencies {
     compileOnly(framework.core)
 }
 
+file(rootProject.gradle.rootProject.projectDir.path + "/credentials.gradle.kts").let {
+    if (it.exists()) {
+        apply(it.path)
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("nexus") {
-            groupId = extra["projectGroup"].toString().lowercase()
-            artifactId = extra["projectName"].toString().lowercase()
-            version = extra["projectVersion"].toString()
+            groupId = project.extra["projectGroup"].toString().lowercase()
+            artifactId = project.extra["projectName"].toString().lowercase()
+            version = project.extra["projectVersion"].toString()
             from(components["java"])
 
             pom {
-                name.set(extra["projectName"].toString())
-                url.set(extra["projectUrl"].toString())
+                name.set(project.extra["projectName"].toString())
+                url.set(project.extra["projectUrl"].toString())
             }
         }
     }
     repositories {
         maven("https://maven.hqservice.kr/repository/maven-releases/") {
             credentials {
-                if (extra.has("nexusUsername") && extra.has("nexusPassword")) {
-                    username = extra["nexusUsername"].toString()
-                    password = extra["nexusPassword"].toString()
+                if (project.extra.has("nexusUsername") && project.extra.has("nexusPassword")) {
+                    username = project.extra["nexusUsername"].toString()
+                    password = project.extra["nexusPassword"].toString()
                 } else if (System.getenv("nexusUsername") != null && System.getenv("nexusPassword") != null) {
                     username = System.getenv("nexusUsername")
                     password = System.getenv("nexusPassword")
